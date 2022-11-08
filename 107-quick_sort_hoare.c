@@ -1,9 +1,9 @@
-
 #include "sort.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
- * partition - finds the partition for the quicksort using the Lomuto scheme
+ * partition - finds the partition for the quicksort using the Hoare scheme
  * @array: array to sort
  * @lo: lowest index of the partition to sort
  * @hi: highest index of the partition to sort
@@ -13,33 +13,29 @@
  */
 size_t partition(int *array, ssize_t lo, ssize_t hi, size_t size)
 {
-	ssize_t i, j;
 	int swap, pivot;
 
 	pivot = array[hi];
-	i = lo - 1;
-	for (j = lo; j < hi; j++)
+	while (lo <= hi)
 	{
-		if (array[j] < pivot)
+		while (array[lo] < pivot)
+			lo++;
+		while (array[hi] > pivot)
+			hi--;
+		if (lo <= hi)
 		{
-			i++;
-			if (i != j)
+			if (lo != hi)
 			{
-				swap = array[i];
-				array[i] = array[j];
-				array[j] = swap;
+				swap = array[lo];
+				array[lo] = array[hi];
+				array[hi] = swap;
 				print_array(array, size);
 			}
+			lo++;
+			hi--;
 		}
 	}
-	if (array[hi] < array[i + 1])
-	{
-		swap = array[i + 1];
-		array[i + 1] = array[hi];
-		array[hi] = swap;
-		print_array(array, size);
-	}
-	return (i + 1);
+	return (hi);
 }
 
 /**
@@ -58,21 +54,21 @@ void quicksort(int *array, ssize_t lo, ssize_t hi, size_t size)
 	if (lo < hi)
 	{
 		pivot = partition(array, lo, hi, size);
-		quicksort(array, lo, pivot - 1, size);
+		quicksort(array, lo, pivot, size);
 		quicksort(array, pivot + 1, hi, size);
 
 	}
 }
 
 /**
- * quick_sort - sorts an array of integers in ascending order using the
+ * quick_sort_hoare - sorts an array of integers in ascending order using the
  * Quick sort algorithm
  * @array: The array to sort
  * @size: The size of the array
  *
  * Return: void
  */
-void quick_sort(int *array, size_t size)
+void quick_sort_hoare(int *array, size_t size)
 {
 	if (array == NULL || size < 2)
 		return;
